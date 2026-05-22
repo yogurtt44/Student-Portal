@@ -1288,6 +1288,7 @@
       const banner = document.getElementById("statusBanner");
       const label = document.getElementById("statusLabel");
       const sub = document.getElementById("statusSub");
+      
       if (isOpen) {
         banner.className = "status-banner open";
         label.textContent = "Open Now";
@@ -1296,12 +1297,14 @@
         banner.className = "status-banner closed";
         label.textContent = "Closed";
         sub.textContent = "Live · Door sensor detected lock";
-        updateLiveOverview();
       }
     }
 
-    // Demo: simulate open
-    updateRoomStatus(true);
+    // FIREBASE LISTENER: Instantly updates the banner when Admin or Sensor changes the room status
+    db.ref("room/isOpen").on("value", snap => {
+      const isRoomOpen = snap.val();
+      updateRoomStatus(isRoomOpen);
+    });
 
     // ════════════════════════════════════════
     // EQUIPMENT RENDER
